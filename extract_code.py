@@ -9,9 +9,9 @@ from tqdm import tqdm
 
 from dataset import ImageFileDataset, CodeRow
 from vqvae import VQVAE
+#从图像数据集中提取特征并存储到LMDB数据库中的流程。主要部分包括数据集加载、特征提取和数据存储
 
-
-def extract(lmdb_env, loader, model, device):
+def extract(lmdb_env, loader, model, device):#从图像数据集中提取特征并存储到LMDB数据库中
     index = 0
 
     with lmdb_env.begin(write=True) as txn:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     loader = DataLoader(dataset, batch_size=128, shuffle=False, num_workers=4)
 
     model = VQVAE()
-    model.load_state_dict(torch.load(args.ckpt))
+    model.load_state_dict(torch.load(args.ckpt))#加载预训练模型权重
     model = model.to(device)
     model.eval()
 
