@@ -4,7 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 # Borrowed from https://github.com/neocxi/pixelsnail-public and ported it to PyTorch
-
+#基于PixelSNAIL模型的实现，用于生成图像。PixelSNAIL是一种自回归模型，适用于生成高质量的图像
 from math import sqrt
 from functools import partial, lru_cache
 
@@ -14,11 +14,11 @@ from torch import nn
 from torch.nn import functional as F
 
 
-def wn_linear(in_dim, out_dim):
+def wn_linear(in_dim, out_dim):#返回一个应用了权值归一化的线性层
     return nn.utils.weight_norm(nn.Linear(in_dim, out_dim))
 
 
-class WNConv2d(nn.Module):
+class WNConv2d(nn.Module):#应用了权值归一化的2D卷积层，可以选择性地应用激活函数
     def __init__(
         self,
         in_channel,
@@ -59,7 +59,7 @@ class WNConv2d(nn.Module):
 
         return out
 
-
+#shift_down 和 shift_right 函数分别将输入张量向下或向右移动
 def shift_down(input, size=1):
     return F.pad(input, [0, 0, size, 0])[:, :, : input.shape[2], :]
 
@@ -68,7 +68,7 @@ def shift_right(input, size=1):
     return F.pad(input, [size, 0, 0, 0])[:, :, :, : input.shape[3]]
 
 
-class CausalConv2d(nn.Module):
+class CausalConv2d(nn.Module):#因果卷积层，确保输出不会依赖未来的输入
     def __init__(
         self,
         in_channel,
@@ -119,7 +119,7 @@ class CausalConv2d(nn.Module):
         return out
 
 
-class GatedResBlock(nn.Module):
+class GatedResBlock(nn.Module):#门控机制的残差块
     def __init__(
         self,
         in_channel,
@@ -180,7 +180,7 @@ class GatedResBlock(nn.Module):
 
 
 @lru_cache(maxsize=64)
-def causal_mask(size):
+def causal_mask(size):#生成一个因果掩码，用于确保自回归模型的预测不会依赖未来的输入
     shape = [size, size]
     mask = np.triu(np.ones(shape), k=1).astype(np.uint8).T
     start_mask = np.ones(size).astype(np.float32)
@@ -192,7 +192,7 @@ def causal_mask(size):
     )
 
 
-class CausalAttention(nn.Module):
+class CausalAttention(nn.Module):#带有因果掩码的多头注意力机制
     def __init__(self, query_channel, key_channel, channel, n_head=8, dropout=0.1):
         super().__init__()
 
@@ -234,7 +234,7 @@ class CausalAttention(nn.Module):
         return out
 
 
-class PixelBlock(nn.Module):
+class PixelBlock(nn.Module):#PixelSNAIL的核心模块，包括一系列残差块和注意力机制
     def __init__(
         self,
         in_channel,
@@ -308,7 +308,7 @@ class PixelBlock(nn.Module):
         return out
 
 
-class CondResNet(nn.Module):
+class CondResNet(nn.Module):#实现了一个条件残差网络
     def __init__(self, in_channel, channel, kernel_size, n_res_block):
         super().__init__()
 
@@ -322,7 +322,12 @@ class CondResNet(nn.Module):
     def forward(self, input):
         return self.blocks(input)
 
+# 实现了整个PixelSNAIL模型，包含水平和垂直的因果卷积层、多个PixelBlock和条件残差网络。模型的前向传播过程包括：
 
+# 对输入进行one-hot编码。
+# 应用水平和垂直的因果卷积。
+# 在每个PixelBlock中进行处理。
+# 最后通过一系列卷积层生成输出
 class PixelSNAIL(nn.Module):
     def __init__(
         self,
