@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from pixelsnail import PixelSNAIL
 
-
+# 下载MNIST数据集，使用PixelSNAIL模型进行训练，每个epoch后保存模型的状态。这是一个生成模型的训练框架，可以根据需要进行调整和优化
 def train(epoch, loader, model, optimizer, device):
     loader = tqdm(loader)
 
