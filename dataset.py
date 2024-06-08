@@ -10,7 +10,7 @@ import lmdb
 
 CodeRow = namedtuple('CodeRow', ['top', 'bottom', 'filename'])
 
-
+#加载图像文件
 class ImageFileDataset(datasets.ImageFolder):
     def __getitem__(self, index):
         sample, target = super().__getitem__(index)
@@ -21,7 +21,7 @@ class ImageFileDataset(datasets.ImageFolder):
 
         return sample, target, filename
 
-
+#LMDB数据库中的数据
 class LMDBDataset(Dataset):
     def __init__(self, path):
         self.env = lmdb.open(
