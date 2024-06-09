@@ -5,7 +5,7 @@ import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-
+#定义了使用PixelSNAIL模型进行训练的脚本，并且支持从LMDB数据集中加载数据、使用学习率调度器、以及可选的自动混合精度（AMP）训练
 try:
     from apex import amp
 
