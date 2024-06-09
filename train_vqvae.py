@@ -13,7 +13,8 @@ from tqdm import tqdm
 from vqvae import VQVAE
 from scheduler import CycleScheduler
 import distributed as dist
-
+#通过命令行参数配置训练流程，包括数据集路径、批次大小、epoch数量、学习率、是否使用分布式训练和学习率调度器等。
+#通过加载VQVAE模型，使用图像数据集，训练模型并保存模型状态。支持分布式训练和自动混合精度（如果可用），以加速训练过程并提高效率
 
 def train(epoch, loader, model, optimizer, scheduler, device):
     if dist.is_primary():
