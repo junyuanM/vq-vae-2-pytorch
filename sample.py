@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from vqvae import VQVAE
 from pixelsnail import PixelSNAIL
-
+#从训练好的VQVAE模型和PixelSNAIL模型中采样图像，并将结果保存为图像文件
 
 @torch.no_grad()
 def sample_model(model, device, batch, size, temperature, condition=None):
