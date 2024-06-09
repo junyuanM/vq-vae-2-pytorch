@@ -3,7 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 
 import distributed as dist_fn
-
+#实现了Vector Quantized Variational Autoencoder (VQVAE) 模型。VQVAE是一种生成模型，它结合了变分自编码器和量化技术，以实现高效的图像生成
 
 # Copyright 2018 The Sonnet Authors. All Rights Reserved.
 #
