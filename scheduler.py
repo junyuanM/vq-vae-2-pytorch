@@ -1,7 +1,7 @@
 from math import cos, pi, floor, sin
 
 from torch.optim import lr_scheduler
-
+#定义了多种学习率调度器
 
 class CosineLR(lr_scheduler._LRScheduler):
     def __init__(self, optimizer, lr_min, lr_max, step_size):
